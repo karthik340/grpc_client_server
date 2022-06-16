@@ -1,0 +1,40 @@
+syntax="proto3";
+import "google/protobuf/wrappers.proto";
+package ecommerce;
+
+option go_package = "./ecommerce";
+service ProductInfo{
+  rpc addProduct(Product) returns (ProductID);
+  rpc getProduct(ProductID) returns (Product);
+}
+
+message Product {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+}
+
+message ProductID {
+  string value = 1;
+}
+
+service OrderManagement{
+  rpc getOrder(google.protobuf.StringValue) returns (Order);
+  rpc searchOrders(google.protobuf.StringValue) returns (stream Order);
+  rpc UpdateOrders(stream Order) returns (google.protobuf.StringValue);
+  rpc ProcessOrders(stream google.protobuf.StringValue) returns (stream CombinedShipment);
+}
+
+message CombinedShipment {
+  string id = 1;
+  string status = 2;
+  repeated Order orderList = 3;
+}
+
+message Order{
+  string id = 1;
+  repeated string items =2;
+  string description = 3;
+  float price = 4;
+  string destination=5;
+}
